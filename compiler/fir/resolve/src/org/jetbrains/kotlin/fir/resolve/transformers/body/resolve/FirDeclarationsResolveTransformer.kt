@@ -309,11 +309,9 @@ class FirDeclarationsResolveTransformer(transformer: FirBodyResolveTransformer) 
 
     override fun transformRegularClass(regularClass: FirRegularClass, data: ResolutionMode): CompositeTransformResult<FirStatement> {
         if (regularClass.symbol.classId.isLocal && regularClass !in context.targetedLocalClasses) {
-            return FirImplicitTypeBodyResolveTransformerAdapterForLocalClasses(
-                components, data
-            ).transformRegularClass(regularClass, null).also {
-                context.storeClass(regularClass)
-            }
+            return regularClass.runAllPhasesForLocalClass(components, data).also {
+                context.storeClass(it)
+            }.compose()
         }
 
         context.storeClass(regularClass)
@@ -350,9 +348,7 @@ class FirDeclarationsResolveTransformer(transformer: FirBodyResolveTransformer) 
         data: ResolutionMode
     ): CompositeTransformResult<FirStatement> {
         if (anonymousObject !in context.targetedLocalClasses) {
-            return FirImplicitTypeBodyResolveTransformerAdapterForLocalClasses(
-                components, data
-            ).transformAnonymousObject(anonymousObject, null)
+            return anonymousObject.runAllPhasesForLocalClass(components, data).compose()
         }
 
         prepareLocalClassForBodyResolve(anonymousObject)
