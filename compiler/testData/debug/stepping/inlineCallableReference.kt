@@ -13,8 +13,9 @@ inline fun f(block: () -> Unit) {
 // LINENUMBERS
 // test.kt:3
 // test.kt:4
-// test.kt:10
+// test.kt:10 @ test.kt:4
 // test.kt:5
 // test.kt:6
-// test.kt:11
+// test.kt:11 @ test.kt:4
 // test.kt:7
+// IGNORE_BACKEND: JVM, JVM_IR

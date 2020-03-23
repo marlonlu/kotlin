@@ -10,12 +10,13 @@ inline fun foo(n: Int) {}
 // LINENUMBERS
 // test.kt:3
 // test.kt:4
-// test.kt:8
+// test.kt:8 @ test.kt:4
 // test.kt:3
 // test.kt:4
-// test.kt:8
+// test.kt:8 @ test.kt:4
 // test.kt:3
 // test.kt:4
-// test.kt:8
+// test.kt:8 @ test.kt:4
 // test.kt:3
 // test.kt:6
+// IGNORE_BACKEND: JVM, JVM_IR

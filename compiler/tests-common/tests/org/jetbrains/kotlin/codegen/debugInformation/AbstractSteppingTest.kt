@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.codegen.debugInformation
 
+import com.sun.jdi.Location
 import com.sun.jdi.VirtualMachine
 import com.sun.jdi.event.Event
 import com.sun.jdi.event.LocatableEvent
@@ -47,6 +48,13 @@ abstract class AbstractSteppingTest : AbstractDebugTest() {
         loggedItems.add(event)
     }
 
+    private data class FileAndLine(val file: String, val line: Int) {
+        override fun toString(): String = "$file:$line"
+    }
+
+    private fun Location.get(stratum: String): FileAndLine =
+        FileAndLine(sourceName(stratum), lineNumber(stratum))
+
     override fun checkResult(wholeFile: File, loggedItems: List<Any>) {
         val expectedLineNumbers = wholeFile
             .readLines()
@@ -57,7 +65,9 @@ abstract class AbstractSteppingTest : AbstractDebugTest() {
         val actualLineNumbers = loggedItems
             .map { event ->
                 val location = (event as LocatableEvent).location()
-                "${location.sourceName()}:${location.lineNumber()}"
+                val mapped = location.get("Kotlin")
+                val callSite = location.get("KotlinDebug")
+                if (mapped == callSite) "$mapped" else "$mapped @ $callSite"
             }
         TestCase.assertEquals(expectedLineNumbers, actualLineNumbers.joinToString("\n"))
     }
