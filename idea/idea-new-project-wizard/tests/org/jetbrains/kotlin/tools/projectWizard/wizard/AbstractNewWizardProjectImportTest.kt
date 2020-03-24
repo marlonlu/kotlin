@@ -79,8 +79,7 @@ abstract class AbstractNewWizardProjectImportTest : PlatformTestCase() {
     }
 
     private fun prepareGradleBuildSystem(directory: Path) {
-        project.getService(GradleSettings::class.java)?.apply {
-            gradleVmOptions = GradleEnvironment.Headless.GRADLE_VM_OPTIONS ?: gradleVmOptions
+        GradleSettings.getInstance(project).apply {
             isOfflineWork = GradleEnvironment.Headless.GRADLE_OFFLINE?.toBoolean() ?: isOfflineWork
             serviceDirectoryPath = GradleEnvironment.Headless.GRADLE_SERVICE_DIRECTORY ?: serviceDirectoryPath
             storeProjectFilesExternally = true
